@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Isbn;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -29,11 +30,11 @@ class BookController extends Controller
     {
         $book = new Book();
 
-        $book->name = "Pan Tadeusz";
-        $book->year = 1999;
-        $book->publication_place = "Kraków";
-        $book->pages = 450;
-        $book->price = 39.99;
+        $book->name = "Czarny dom";
+        $book->year = 2010;
+        $book->publication_place = "Warszawa";
+        $book->pages = 648;
+        $book->price = 59.99;
 
         $book->save();
 
@@ -106,5 +107,17 @@ class BookController extends Controller
         $book = Book::find($id);
         $book->delete();
         return redirect('books');
+    }
+
+    public function cheapest(Book $book) {
+        $booksList = DB::table('books')->orderBy('price', 'asc')->limit(3)->get;
+
+        return view('books/list', ['booksList' => $booksList]);
+    }
+
+    public function longest(Book $book) {
+        $booksList = DB::table('books')->orderBy('pages', 'desc')->limit(3)->get();
+
+        return view('books/list', ['booksList', $booksList]);
     }
 }
